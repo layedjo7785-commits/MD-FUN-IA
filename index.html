@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD FUN AI - Le rire sans frontières</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100d20;color:white;font-family:Arial,sans-serif}
+header{padding:22px 18px;text-align:center;background:linear-gradient(135deg,#5725a8,#172b70)}
+.logo{font-size:30px;font-weight:900}
+.logo span{color:#ffe36e}
+header p{color:#e5dcff;margin-bottom:4px}
+main{max-width:650px;margin:auto;padding:18px}
+.hero{text-align:center;padding:20px 5px}
+.hero h1{font-size:29px;margin:8px 0}
+.hero p{color:#c9c2df;line-height:1.5}
+.mascot{font-size:65px}
+.modes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0}
+.mode{border:1px solid #7557b5;color:white;background:#241b3c;border-radius:22px;padding:10px 13px;cursor:pointer}
+.mode.active{background:#713bd0;border-color:#a88aff}
+.chat{background:#1c1730;border:1px solid #40345f;border-radius:18px;padding:15px}
+.messages{height:310px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.msg{padding:12px 14px;border-radius:15px;max-width:88%;line-height:1.45;white-space:pre-wrap}
+.bot{background:#33264f;align-self:flex-start}
+.user{background:#6240b4;align-self:flex-end}
+.inputrow{display:flex;gap:8px;margin-top:14px}
+input{min-width:0;flex:1;padding:14px;border-radius:12px;border:1px solid #65518c;background:#100d20;color:white;font-size:15px}
+button.send{background:#ffda58;color:#241631;border:0;border-radius:12px;padding:0 18px;font-weight:bold}
+.small{text-align:center;color:#aaa1c2;font-size:12px;margin-top:14px}
+footer{text-align:center;padding:25px;color:#a9a0c1;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MD <span>FUN</span> AI 😂</div>
+  <p>Le rire n'a pas de frontières !</p>
+</header>
+<main>
+  <section class="hero">
+    <div class="mascot">🤖🤣</div>
+    <h1>Bienvenue dans mon univers !</h1>
+    <p>Humour, délires, défis et conversations sans ennui. Viens discuter avec moi !</p>
+  </section>
+
+  <div class="modes">
+    <button class="mode active" onclick="setMode('Mix de tous les humours',this)">🤣 Tous les humours</button>
+    <button class="mode" onclick="setMode('Sarcastique',this)">😏 Sarcasme</button>
+    <button class="mode" onclick="setMode('Absurde',this)">🤪 Absurde</button>
+    <button class="mode" onclick="setMode('Taquin',this)">😈 Taquin</button>
+  </div>
+
+  <section class="chat">
+    <div class="messages" id="messages">
+      <div class="msg bot">Salut ! 😂 Moi, c'est MD FUN AI. Je suis ici pour combattre l'ennui. Alors, raconte-moi quelque chose !</div>
+    </div>
+    <div class="inputrow">
+      <input id="message" placeholder="Écris quelque chose..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="send" onclick="sendMessage()">Envoyer</button>
+    </div>
+  </section>
+  <p class="small">Prototype de démonstration · Français · English · Bambara</p>
+</main>
+<footer>© 2026 MD FUN AI · Créé pour faire sourire le monde 🌍</footer>
+
+<script>
+let mode="Mix de tous les humours";
+function setMode(m,b){
+ mode=m;
+ document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));
+ b.classList.add('active');
+}
+function sendMessage(){
+ const input=document.getElementById('message');
+ const value=input.value.trim();
+ if(!value)return;
+ addMessage(value,'user');
+ input.value='';
+ let answer;
+ const t=value.toLowerCase();
+ if(t.includes('bonjour')||t.includes('salut')||t.includes('hello')){
+  answer="Salut champion ! 😂 Tu arrives avec un bonjour, mais moi j'attendais une entrée spectaculaire avec des feux d'artifice !";
+ }else if(t.includes('bambara')){
+  answer="I ni ce ! 😄 On va aussi travailler notre humour en bambara. Pour l'instant, cette version est encore une démonstration.";
+ }else if(t.includes('triste')||t.includes('malheureux')){
+  answer="Oh, courage ! ❤️ Même les journées difficiles finissent. Je peux essayer de te faire sourire, mais je peux aussi simplement t'écouter.";
+ }else if(t.includes('blague')||t.includes('rire')){
+  answer="Pourquoi le téléphone ne raconte jamais de secrets ? Parce qu'il finit toujours par tout laisser fuiter ! 😂";
+ }else{
+  const jokes=[
+   "Attends… mon cerveau comique vient de faire une réunion d'urgence. 🤣",
+   "Même mon robot intérieur a demandé une pause après avoir lu ça ! 😂",
+   "Je réfléchis… mais mes neurones font actuellement une compétition de sieste. 😭",
+   "Voilà une conversation qui mérite du pop-corn ! 🍿"
+  ];
+  answer=jokes[Math.floor(Math.random()*jokes.length)]+" (Je suis encore en mode démonstration.)";
+ }
+ setTimeout(()=>addMessage(answer,'bot'),350);
+}
+function addMessage(text,type){
+ const box=document.getElementById('messages');
+ const item=document.createElement('div');
+ item.className='msg '+type;
+ item.textContent=text;
+ box.appendChild(item);
+ box.scrollTop=box.scrollHeight;
+}
+</script>
+</body>
+</html>
