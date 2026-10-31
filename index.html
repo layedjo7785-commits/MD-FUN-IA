@@ -3,488 +3,1598 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>MD FUN AI</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;min-height:100vh;color:white;background:radial-gradient(circle at top left,#6b16b8,transparent 35%),radial-gradient(circle at top right,#ff168d,transparent 30%),linear-gradient(160deg,#090012,#160020,#08000e)}
-.app{width:100%;max-width:850px;margin:auto;padding:18px}
-.hero{position:relative;overflow:hidden;padding:25px 18px;border-radius:28px;background:linear-gradient(135deg,#25104a,#160b30);border:1px solid rgba(255,255,255,.18);box-shadow:0 0 35px rgba(255,0,170,.25);margin-bottom:18px}
-.hero-content{display:flex;align-items:center;gap:18px}
-.girl{width:95px;height:95px;border-radius:50%;flex-shrink:0;overflow:hidden;border:3px solid #ff3ba7;background:linear-gradient(135deg,#ff3ba7,#7b2cff);display:flex;align-items:center;justify-content:center;font-size:48px}
-.girl span{filter:drop-shadow(0 0 8px #fff)}
-.hero h1{font-size:32px;margin-bottom:6px}
-.hero h1 b{color:#ff3ba7}
-.hero p{color:#e8d9ff;line-height:1.5}
-.crown{position:absolute;right:20px;top:12px;font-size:28px}
-.mood-box{margin-bottom:18px;padding:18px;border-radius:25px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15)}
-.mood-box h2{font-size:20px;margin-bottom:6px}
-.mood-box p{color:#cdbfe5;margin-bottom:14px}
-.moods{display:flex;gap:9px;flex-wrap:wrap}
-.mood-btn{border:1px solid rgba(255,255,255,.2);background:#24133d;color:white;padding:10px 13px;border-radius:18px;cursor:pointer;font-size:14px}
-.mood-btn:hover,.mood-btn.active{background:linear-gradient(90deg,#ff008c,#8a2cff)}
-.features{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
-.card{border-radius:24px;padding:18px;min-height:175px;cursor:pointer;border:2px solid rgba(255,255,255,.14);transition:.2s;position:relative;overflow:hidden}
-.card:active{transform:scale(.97)}
-.card .icon{font-size:38px;margin-bottom:10px}
-.card h3{font-size:19px;margin-bottom:8px}
-.card p{font-size:14px;line-height:1.4;color:#f0eaff}
-.card button{margin-top:13px;border:none;border-radius:18px;padding:9px 14px;color:white;font-weight:bold;cursor:pointer}
-.mood-card{background:linear-gradient(135deg,#53115e,#210530);border-color:#ff20a8}
-.mood-card button{background:#ff149f}
-.dream-card{background:linear-gradient(135deg,#071b62,#151c40);border-color:#248cff}
-.dream-card button{background:#1688ff}
-.game-card{background:linear-gradient(135deg,#5b2600,#291100);border-color:#ff9d00}
-.game-card button{background:#ff9800;color:#111}
-.fun-card{background:linear-gradient(135deg,#064b23,#082b18);border-color:#3cff75}
-.fun-card button{background:#22d65d;color:#071a0d}
-.chat-panel{border-radius:28px;padding:16px;background:rgba(10,4,25,.85);border:1px solid rgba(255,255,255,.16);box-shadow:0 0 35px rgba(100,30,255,.15)}
-.chat-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.chat-avatar{width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,#ff2e9c,#8035ff);display:flex;justify-content:center;align-items:center;font-size:25px}
-.chat-title small{display:block;color:#aaffc1;margin-top:3px}
-#chat{height:350px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:5px}
-.msg{max-width:86%;padding:12px 15px;border-radius:18px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
-.bot{align-self:flex-start;background:#29164a;border-bottom-left-radius:5px}
-.user{align-self:flex-end;background:linear-gradient(135deg,#8a2cff,#e90089);border-bottom-right-radius:5px}
-.voice-button{display:block;margin-top:10px;padding:7px 12px;border:0;border-radius:15px;background:#8035ff;color:white;cursor:pointer;font-size:12px}
-.status{text-align:center;margin-top:10px;font-size:12px;color:#c8b5e8}
-.call-area{margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,.15);border-radius:20px;background:rgba(128,53,255,.12);text-align:center}
-#callButton,#interruptButton{border:0;border-radius:24px;padding:13px 20px;color:white;font-weight:bold;font-size:15px;cursor:pointer}
-#callButton{background:linear-gradient(100deg,#ff149f,#7d2cff)}
-#callButton.active{background:linear-gradient(100deg,#c62828,#8e174f)}
-#interruptButton{display:none;margin:10px auto 0;background:#493064;font-size:13px;padding:9px 15px}
-#callStatus{margin-top:9px;color:#d9c9f4;font-size:12px;line-height:1.4}
-footer{text-align:center;padding:22px 10px 5px;color:#bba9d4;font-size:12px}
-@media(max-width:520px){.features{grid-template-columns:1fr}.hero h1{font-size:26px}.girl{width:75px;height:75px;font-size:38px}}
-@media(max-width:380px){form{gap:6px}#send,#mic{width:46px;height:46px}input{padding:13px 12px;font-size:14px}}
-form{display:flex;gap:9px;margin-top:15px;align-items:center}
-input{flex:1;min-width:0;border:none;outline:none;border-radius:25px;padding:15px 18px;background:#1d1030;color:white;font-size:16px;border:1px solid #7a42b7}
-#send,#mic{border:none;width:54px;height:54px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#ff149f,#7d2cff);color:white;font-size:20px;cursor:pointer}
-#send:disabled,#mic:disabled{opacity:.5;cursor:not-allowed}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+  color:white;
+  background:
+    radial-gradient(circle at top left,#6b16b8,transparent 35%),
+    radial-gradient(circle at top right,#ff168d,transparent 30%),
+    linear-gradient(160deg,#090012,#160020,#08000e);
+}
+
+.app{
+  width:100%;
+  max-width:850px;
+  margin:auto;
+  padding:18px;
+}
+
+/* AUTHENTIFICATION */
+
+#authScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.auth-box{
+  width:100%;
+  max-width:430px;
+  padding:28px 22px;
+  border-radius:28px;
+  background:rgba(25,10,50,.95);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 0 40px rgba(255,0,170,.25);
+}
+
+.auth-logo{
+  text-align:center;
+  font-size:58px;
+  margin-bottom:10px;
+}
+
+.auth-box h1{
+  text-align:center;
+  font-size:30px;
+}
+
+.auth-box h1 b{
+  color:#ff3ba7;
+}
+
+.auth-subtitle{
+  text-align:center;
+  color:#d8c8ee;
+  margin:10px 0 22px;
+  line-height:1.5;
+}
+
+.auth-tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:18px;
+}
+
+.auth-tab{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:16px;
+  color:white;
+  background:#211038;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.auth-tab.active{
+  background:linear-gradient(135deg,#ff149f,#7d2cff);
+}
+
+.auth-form{
+  display:none;
+  flex-direction:column;
+  gap:12px;
+}
+
+.auth-form.active{
+  display:flex;
+}
+
+.auth-form input{
+  width:100%;
+  border:none;
+  outline:none;
+  border-radius:18px;
+  padding:15px;
+  background:#160a28;
+  border:1px solid #6d3da5;
+  color:white;
+  font-size:16px;
+}
+
+.auth-submit{
+  border:none;
+  border-radius:18px;
+  padding:15px;
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff149f,#7d2cff);
+}
+
+.auth-message{
+  text-align:center;
+  font-size:13px;
+  min-height:20px;
+  margin-top:5px;
+  color:#ffc0e3;
+}
+
+.auth-info{
+  text-align:center;
+  margin-top:16px;
+  font-size:12px;
+  color:#bca9d8;
+  line-height:1.5;
+}
+
+/* APPLICATION */
+
+#mainApp{
+  display:none;
+}
+
+.top-user{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+  padding:10px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  font-size:13px;
+}
+
+.user-email{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#e8d9ff;
+}
+
+.logout-btn{
+  border:none;
+  border-radius:14px;
+  padding:8px 12px;
+  background:#4a163f;
+  color:#ffb5df;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+/* HEADER */
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:25px 18px;
+  border-radius:28px;
+  background:linear-gradient(135deg,#25104a,#160b30);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 0 35px rgba(255,0,170,.25);
+  margin-bottom:18px;
+}
+
+.hero-content{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.girl{
+  width:95px;
+  height:95px;
+  border-radius:50%;
+  flex-shrink:0;
+  overflow:hidden;
+  border:3px solid #ff3ba7;
+  background:linear-gradient(135deg,#ff3ba7,#7b2cff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+}
+
+.hero h1{
+  font-size:32px;
+  margin-bottom:6px;
+}
+
+.hero h1 b{
+  color:#ff3ba7;
+}
+
+.hero p{
+  color:#e8d9ff;
+  line-height:1.5;
+}
+
+.crown{
+  position:absolute;
+  right:20px;
+  top:12px;
+  font-size:28px;
+}
+
+/* MOOD */
+
+.mood-box{
+  margin-bottom:18px;
+  padding:18px;
+  border-radius:25px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.15);
+}
+
+.mood-box h2{
+  font-size:20px;
+  margin-bottom:6px;
+}
+
+.mood-box p{
+  color:#cdbfe5;
+  margin-bottom:14px;
+}
+
+.moods{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.mood-btn{
+  border:1px solid rgba(255,255,255,.2);
+  background:#24133d;
+  color:white;
+  padding:10px 13px;
+  border-radius:18px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.mood-btn.active{
+  background:linear-gradient(90deg,#ff008c,#8a2cff);
+}
+
+/* FEATURES */
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.card{
+  border-radius:24px;
+  padding:18px;
+  min-height:175px;
+  cursor:pointer;
+  border:2px solid rgba(255,255,255,.14);
+}
+
+.card:active{
+  transform:scale(.97);
+}
+
+.card .icon{
+  font-size:38px;
+  margin-bottom:10px;
+}
+
+.card h3{
+  font-size:19px;
+  margin-bottom:8px;
+}
+
+.card p{
+  font-size:14px;
+  line-height:1.4;
+  color:#f0eaff;
+}
+
+.card button{
+  margin-top:13px;
+  border:none;
+  border-radius:18px;
+  padding:9px 14px;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.mood-card{
+  background:linear-gradient(135deg,#53115e,#210530);
+  border-color:#ff20a8;
+}
+
+.mood-card button{
+  background:#ff149f;
+}
+
+.dream-card{
+  background:linear-gradient(135deg,#071b62,#151c40);
+  border-color:#248cff;
+}
+
+.dream-card button{
+  background:#1688ff;
+}
+
+.game-card{
+  background:linear-gradient(135deg,#5b2600,#291100);
+  border-color:#ff9d00;
+}
+
+.game-card button{
+  background:#ff9800;
+  color:#111;
+}
+
+.fun-card{
+  background:linear-gradient(135deg,#064b23,#082b18);
+  border-color:#3cff75;
+}
+
+.fun-card button{
+  background:#22d65d;
+  color:#071a0d;
+}
+
+/* CHAT */
+
+.chat-panel{
+  border-radius:28px;
+  padding:16px;
+  background:rgba(10,4,25,.85);
+  border:1px solid rgba(255,255,255,.16);
+}
+
+.chat-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.chat-avatar{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff2e9c,#8035ff);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:25px;
+}
+
+.chat-title small{
+  display:block;
+  color:#aaffc1;
+  margin-top:3px;
+}
+
+#chat{
+  height:350px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:5px;
+}
+
+.msg{
+  max-width:86%;
+  padding:12px 15px;
+  border-radius:18px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.bot{
+  align-self:flex-start;
+  background:#29164a;
+  border-bottom-left-radius:5px;
+}
+
+.user{
+  align-self:flex-end;
+  background:linear-gradient(135deg,#8a2cff,#e90089);
+  border-bottom-right-radius:5px;
+}
+
+.voice-button{
+  display:block;
+  margin-top:10px;
+  padding:7px 12px;
+  border:0;
+  border-radius:15px;
+  background:#8035ff;
+  color:white;
+  cursor:pointer;
+  font-size:12px;
+}
+
+/* INPUT */
+
+form{
+  display:flex;
+  gap:9px;
+  margin-top:15px;
+  align-items:center;
+}
+
+#message{
+  flex:1;
+  min-width:0;
+  border:none;
+  outline:none;
+  border-radius:25px;
+  padding:15px 18px;
+  background:#1d1030;
+  color:white;
+  font-size:16px;
+  border:1px solid #7a42b7;
+}
+
+#send,
+#mic{
+  border:none;
+  width:54px;
+  height:54px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff149f,#7d2cff);
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+}
+
+#send:disabled,
+#mic:disabled{
+  opacity:.5;
+}
+
+.status{
+  text-align:center;
+  margin-top:10px;
+  font-size:12px;
+  color:#c8b5e8;
+}
+
+footer{
+  text-align:center;
+  padding:22px 10px 5px;
+  color:#bba9d4;
+  font-size:12px;
+}
+
+@media(max-width:520px){
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .hero h1{
+    font-size:26px;
+  }
+
+  .girl{
+    width:75px;
+    height:75px;
+    font-size:38px;
+  }
+}
+
+@media(max-width:380px){
+  form{
+    gap:6px;
+  }
+
+  #send,
+  #mic{
+    width:46px;
+    height:46px;
+  }
+
+  #message{
+    padding:13px 12px;
+    font-size:14px;
+  }
+}
 </style>
 </head>
+
 <body>
+
+<!-- ÉCRAN DE CONNEXION -->
+
+<section id="authScreen">
+
+<div class="auth-box">
+
+<div class="auth-logo">👩🏾‍🦱💖</div>
+
+<h1>MD FUN <b>AI</b></h1>
+
+<p class="auth-subtitle">
+Crée ton espace personnel et retrouve tes conversations.
+</p>
+
+<div class="auth-tabs">
+
+<button class="auth-tab active" id="loginTab">
+Connexion
+</button>
+
+<button class="auth-tab" id="registerTab">
+Inscription
+</button>
+
+</div>
+
+<form class="auth-form active" id="loginForm">
+
+<input
+id="loginEmail"
+type="email"
+placeholder="Ton adresse e-mail"
+required
+>
+
+<input
+id="loginPassword"
+type="password"
+placeholder="Ton mot de passe"
+required
+>
+
+<button class="auth-submit" type="submit">
+🔑 Se connecter
+</button>
+
+</form>
+
+<form class="auth-form" id="registerForm">
+
+<input
+id="registerEmail"
+type="email"
+placeholder="Ton adresse e-mail"
+required
+>
+
+<input
+id="registerPassword"
+type="password"
+placeholder="Crée un mot de passe (8 caractères minimum)"
+minlength="8"
+required
+>
+
+<button class="auth-submit" type="submit">
+✨ Créer mon compte
+</button>
+
+</form>
+
+<div class="auth-message" id="authMessage"></div>
+
+<p class="auth-info">
+🔐 Ton compte permet de protéger tes conversations et ta mémoire personnelle.
+</p>
+
+</div>
+
+</section>
+
+<!-- APPLICATION -->
+
+<div id="mainApp">
+
 <div class="app">
+
+<div class="top-user">
+
+<div class="user-email" id="userEmail">
+👤 Utilisateur
+</div>
+
+<button class="logout-btn" id="logoutBtn">
+🚪 Déconnexion
+</button>
+
+</div>
+
 <section class="hero">
-  <div class="crown">👑</div>
-  <div class="hero-content">
-    <div class="girl" title="MD FUN AI"><span>👩🏾‍🦱</span></div>
-    <div>
-      <h1>MD FUN <b>AI</b> 💖</h1>
-      <p><b>Ton intelligence. Ton humeur. Ton univers.</b></p>
-      <p>Une IA prête à réfléchir, discuter, imaginer et rire avec toi quand tu le souhaites.</p>
-    </div>
-  </div>
+
+<div class="crown">👑</div>
+
+<div class="hero-content">
+
+<div class="girl">
+👩🏾‍🦱
+</div>
+
+<div>
+
+<h1>MD FUN <b>AI</b> 💖</h1>
+
+<p><b>Ton humeur. Son humour. Votre délire.</b></p>
+
+<p>
+Je suis MD FUN AI : intelligente, attentive et prête à entrer dans ton univers.
+</p>
+
+</div>
+
+</div>
+
 </section>
 
 <section class="mood-box">
-  <h2>😂 Mood Matchmaker</h2>
-  <p>Choisis ton humeur ou un style de conversation. Le mode normal reste sérieux par défaut.</p>
-  <div class="moods">
-    <button class="mood-btn active" data-mood="Mode normal et sérieux">🧠 Normal</button>
-    <button class="mood-btn" data-mood="Humeur joyeuse et énergique, sans humour forcé">😄 Joyeux</button>
-    <button class="mood-btn" data-mood="Humour taquin et joueur, bienveillant">😏 Taquin</button>
-    <button class="mood-btn" data-mood="Humeur fatiguée, répondre avec douceur">😴 Fatigué</button>
-    <button class="mood-btn" data-mood="Stressé, besoin de légèreté et d'écoute">😵 Stressé</button>
-    <button class="mood-btn" data-mood="Triste, besoin de douceur et d'écoute">😔 Triste</button>
-    <button class="mood-btn" data-mood="Humour absurde et grand délire demandé">🤪 Délire</button>
-    <button class="mood-btn" data-mood="Style sarcasme léger et intelligent, seulement pour plaisanter">🎭 Sarcastique</button>
-    <button class="mood-btn" data-mood="Répartie rapide et improvisation humoristique">⚡ Répartie</button>
-  </div>
+
+<h2>😂 Mood Matchmaker</h2>
+
+<p>
+Choisis ton humeur et MD FUN AI adaptera son énergie à toi.
+</p>
+
+<div class="moods">
+
+<button class="mood-btn" data-mood="Joyeux et énergique">
+😄 Joyeux
+</button>
+
+<button class="mood-btn" data-mood="Taquin et joueur">
+😏 Taquin
+</button>
+
+<button class="mood-btn" data-mood="Fatigué">
+😴 Fatigué
+</button>
+
+<button class="mood-btn" data-mood="Stressé, besoin de légèreté">
+😵 Stressé
+</button>
+
+<button class="mood-btn" data-mood="Triste, besoin de douceur">
+😔 Triste
+</button>
+
+<button class="mood-btn" data-mood="Prêt pour du grand délire">
+🤪 Délire
+</button>
+
+</div>
+
 </section>
 
 <section class="features">
-  <div class="card mood-card" id="moodCard"><div class="icon">😂👑</div><h3>Mood Matchmaker</h3><p>Ton humeur influence le style de conversation et l'énergie de MD FUN AI.</p><button>Choisir mon mood →</button></div>
-  <div class="card dream-card" id="dreamCard"><div class="icon">🌙☁️</div><h3>Mes Rêves</h3><p>Raconte ton rêve. Explore-le, imagine des pistes ou transforme-le en histoire.</p><button>Rêver avec MD →</button></div>
-  <div class="card game-card" id="gameCard"><div class="icon">🎮🔥</div><h3>Jeux & Défis</h3><p>Défis, énigmes, jeux de mots et expériences interactives.</p><button>Jouer avec MD →</button></div>
-  <div class="card fun-card"><div class="icon">✨😂</div><h3>Univers FUN</h3><p>Humour, improvisation et créativité, uniquement quand tu en as envie.</p><button id="funBtn">Lancer un délire →</button></div>
+
+<div class="card mood-card" id="moodCard">
+
+<div class="icon">😂👑</div>
+
+<h3>Mood Matchmaker</h3>
+
+<p>
+Ton humeur influence le style de conversation de MD FUN AI.
+</p>
+
+<button>
+Choisir mon mood →
+</button>
+
+</div>
+
+<div class="card dream-card" id="dreamCard">
+
+<div class="icon">🌙☁️</div>
+
+<h3>Mes Rêves</h3>
+
+<p>
+Raconte ton rêve. MD FUN AI peut l'explorer avec toi.
+</p>
+
+<button>
+Rêver avec MD →
+</button>
+
+</div>
+
+<div class="card game-card" id="gameCard">
+
+<div class="icon">🎮🔥</div>
+
+<h3>Jeux & Défis</h3>
+
+<p>
+Jeux, défis, énigmes et expériences amusantes.
+</p>
+
+<button>
+Jouer →
+</button>
+
+</div>
+
+<div class="card fun-card" id="funCard">
+
+<div class="icon">✨😂</div>
+
+<h3>Univers FUN</h3>
+
+<p>
+Une conversation qui peut devenir drôle quand tu en as envie.
+</p>
+
+<button>
+Lancer un délire →
+</button>
+
+</div>
+
 </section>
 
 <section class="chat-panel">
-  <div class="chat-title">
-    <div class="chat-avatar">👩🏾‍🦱</div>
-    <div><b>MD FUN AI</b><small id="modeText">🧠 Mode normal et sérieux</small></div>
-  </div>
-  <div id="chat"><div class="msg bot">Salut ! Moi, c'est MD FUN AI. 🧠 Je suis là pour réfléchir avec toi, répondre à tes questions et t'aider. L'humour ? Seulement si tu en as envie. 💖</div></div>
-  <form id="form">
-    <input id="message" type="text" placeholder="Écris quelque chose..." maxlength="2000" autocomplete="off">
-    <button id="mic" type="button" title="Dicter un message">🎤</button>
-    <button id="send" type="submit">➤</button>
-  </form>
-  <div class="status" id="status">MD FUN AI est prête 💖</div>
-  <div class="call-area">
-    <button type="button" id="callButton">📞 Démarrer l'appel vocal</button>
-    <button type="button" id="interruptButton">⏸ Interrompre la voix</button>
-    <div id="callStatus">Conversation vocale : désactivée · La disponibilité dépend de ton navigateur et de ton téléphone.</div>
-  </div>
+
+<div class="chat-title">
+
+<div class="chat-avatar">
+👩🏾‍🦱
+</div>
+
+<div>
+
+<b>MD FUN AI</b>
+
+<small id="modeText">
+✨ Prête à discuter avec toi
+</small>
+
+</div>
+
+</div>
+
+<div id="chat">
+
+<div class="msg bot">
+<div>
+Salut 😏 Moi, c'est MD FUN AI. Connectée à ton espace personnel et prête à discuter avec toi.
+</div>
+</div>
+
+</div>
+
+<form id="form">
+
+<input
+id="message"
+type="text"
+placeholder="Écris quelque chose..."
+maxlength="2000"
+autocomplete="off"
+required
+>
+
+<button id="mic" type="button" title="Parler">
+🎤
+</button>
+
+<button id="send" type="submit">
+➤
+</button>
+
+</form>
+
+<div class="status" id="status">
+MD FUN AI est prête 💖
+</div>
+
 </section>
-<footer>MD FUN AI · Mood Matchmaker · Mes Rêves · Jeux & Défis<br>Français · English · Bambara<br><br>© 2026 MD FUN AI · Ton intelligence. Ton humeur. Ton univers. 🌍</footer>
+
+<footer>
+
+MD FUN AI · Mood Matchmaker · Mes Rêves<br>
+
+Français · English · Bambara<br><br>
+
+© 2026 MD FUN AI · Ton humeur. Son humour. Votre délire. 🌍
+
+</footer>
+
+</div>
+
 </div>
 
 <script>
 "use strict";
 
-const API="https://md-fun-ia.layedjo7785.workers.dev/chat";
-const chat=document.getElementById("chat");
-const form=document.getElementById("form");
-const input=document.getElementById("message");
-const send=document.getElementById("send");
-const mic=document.getElementById("mic");
-const status=document.getElementById("status");
-const modeText=document.getElementById("modeText");
-const callButton=document.getElementById("callButton");
-const callStatus=document.getElementById("callStatus");
-const interruptButton=document.getElementById("interruptButton");
+/* CONFIGURATION */
 
-let selectedMood="Mode normal et sérieux";
-let history=[];
-let recognition=null;
-let listening=false;
-let callActive=false;
-let waitingForAI=false;
-let speaking=false;
+const API =
+"https://md-fun-ia.layedjo7785.workers.dev";
 
-const recognitionSupported=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
-const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+let token =
+localStorage.getItem("md_fun_token") || "";
 
-function addMessage(text,who){
-  const div=document.createElement("div");
-  div.className="msg "+who;
-  const content=document.createElement("div");
-  content.textContent=text;
-  div.appendChild(content);
+let currentUser = null;
 
-  if(who==="bot"){
-    const voiceButton=document.createElement("button");
-    voiceButton.type="button";
-    voiceButton.className="voice-button";
-    voiceButton.textContent="🔊 Écouter";
-    voiceButton.addEventListener("click",()=>speak(text));
-    div.appendChild(voiceButton);
-  }
+let selectedMood = "";
 
-  chat.appendChild(div);
-  chat.scrollTop=chat.scrollHeight;
+let conversationId =
+localStorage.getItem("md_fun_conversation") || "";
+
+let recognition = null;
+
+let listening = false;
+
+/* ELEMENTS */
+
+const authScreen =
+document.getElementById("authScreen");
+
+const mainApp =
+document.getElementById("mainApp");
+
+const loginTab =
+document.getElementById("loginTab");
+
+const registerTab =
+document.getElementById("registerTab");
+
+const loginForm =
+document.getElementById("loginForm");
+
+const registerForm =
+document.getElementById("registerForm");
+
+const authMessage =
+document.getElementById("authMessage");
+
+const userEmail =
+document.getElementById("userEmail");
+
+const logoutBtn =
+document.getElementById("logoutBtn");
+
+const chat =
+document.getElementById("chat");
+
+const form =
+document.getElementById("form");
+
+const input =
+document.getElementById("message");
+
+const send =
+document.getElementById("send");
+
+const mic =
+document.getElementById("mic");
+
+const status =
+document.getElementById("status");
+
+const modeText =
+document.getElementById("modeText");
+
+/* API */
+
+async function api(path, options = {}) {
+
+const headers = {
+"Content-Type":"application/json"
+};
+
+if(token){
+headers.Authorization =
+"Bearer " + token;
 }
 
-function chooseFrenchVoice(){
-  if(!("speechSynthesis" in window))return null;
-  const voices=window.speechSynthesis.getVoices()||[];
-  const french=voices.filter(v=>/^fr([_-]|$)/i.test(v.lang));
-  const pool=french.length?french:voices;
-  const preferred=/female|woman|femme|samantha|am[eé]lie|audrey|marie|julie|celine|léa|lea|google français/i;
-  return pool.find(v=>preferred.test(v.name))||pool[0]||null;
+const response =
+await fetch(API + path, {
+...options,
+headers:{
+...headers,
+...(options.headers || {})
 }
-
-function speak(text,onDone){
-  if(!("speechSynthesis" in window)){
-    if(onDone)onDone();
-    status.textContent="Lecture vocale indisponible sur ce navigateur.";
-    return;
-  }
-
-  window.speechSynthesis.cancel();
-  speaking=true;
-  interruptButton.style.display="block";
-
-  const utterance=new SpeechSynthesisUtterance(text);
-  utterance.lang="fr-FR";
-  utterance.rate=0.96;
-  utterance.pitch=1.1;
-
-  const voice=chooseFrenchVoice();
-  if(voice){
-    utterance.voice=voice;
-    utterance.lang=voice.lang||"fr-FR";
-  }
-
-  utterance.onend=()=>{
-    speaking=false;
-    interruptButton.style.display="none";
-    if(onDone)onDone();
-  };
-
-  utterance.onerror=()=>{
-    speaking=false;
-    interruptButton.style.display="none";
-    if(onDone)onDone();
-  };
-
-  window.speechSynthesis.speak(utterance);
-}
-
-function interruptSpeech(){
-  if("speechSynthesis" in window)window.speechSynthesis.cancel();
-  speaking=false;
-  interruptButton.style.display="none";
-
-  if(callActive&&!waitingForAI){
-    callStatus.textContent="Voix interrompue. Je t'écoute...";
-    startCallListening();
-  }else{
-    callStatus.textContent="Lecture interrompue.";
-  }
-}
-
-interruptButton.addEventListener("click",interruptSpeech);
-
-if("speechSynthesis" in window){
-  window.speechSynthesis.onvoiceschanged=()=>chooseFrenchVoice();
-}
-
-function setMood(mood,label){
-  selectedMood=mood;
-  modeText.textContent=label;
-}
-
-document.querySelectorAll(".mood-btn").forEach(button=>{
-  button.addEventListener("click",()=>{
-    document.querySelectorAll(".mood-btn").forEach(b=>b.classList.remove("active"));
-    button.classList.add("active");
-    setMood(button.dataset.mood,"Mood : "+button.textContent.trim());
-    addMessage("Mode activé : "+button.textContent.trim()+". Je m'adapte à ce style.","bot");
-  });
 });
 
-document.getElementById("moodCard").addEventListener("click",()=>{
-  document.querySelector(".mood-box").scrollIntoView({behavior:"smooth"});
-});
+let data = {};
 
-document.getElementById("dreamCard").addEventListener("click",()=>{
-  setMood("Mode Rêves et imagination. Explorer les rêves avec créativité sans présenter les interprétations comme des certitudes.","🌙 Mode Rêves activé");
-  input.placeholder="Raconte ton rêve...";
-  addMessage("🌙 Bienvenue dans Mes Rêves. Raconte-moi ce dont tu te souviens. Nous pouvons l'explorer ou en faire une histoire.","bot");
-});
-
-document.getElementById("gameCard").addEventListener("click",()=>{
-  setMood("Mode Jeux et Défis. Proposer des jeux interactifs et guider l'utilisateur étape par étape.","🎮 Mode Jeux et Défis");
-  input.placeholder="Choisis ou invente un défi...";
-  addMessage("🎮 Le terrain est ouvert ! Demande-moi une énigme, un jeu ou un défi pour commencer.","bot");
-});
-
-document.getElementById("funBtn").addEventListener("click",()=>{
-  setMood("Mode grand délire humoristique explicitement demandé. Humour absurde et improvisation bienveillante. Répondre sérieusement si la question devient sérieuse.","🤪 Mode Grand Délire");
-  addMessage("🤪 Mode Grand Délire activé ! Tu as demandé le délire : à toi de lancer le premier défi.","bot");
-});
-
-async function sendMessage(rawMessage,fromCall=false){
-  const originalMessage=rawMessage.trim();
-  if(!originalMessage||send.disabled)return;
-
-  const message="[STYLE ACTUEL : "+selectedMood+"]\n"+originalMessage;
-
-  addMessage(originalMessage,"user");
-  input.value="";
-  send.disabled=true;
-  status.textContent="MD FUN AI réfléchit...";
-
-  if(fromCall){
-    waitingForAI=true;
-    callStatus.textContent="🧠 MD FUN AI prépare sa réponse...";
-  }
-
-  try{
-    const response=await fetch(API,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({message,history})
-    });
-
-    const data=await response.json();
-
-    if(!response.ok||!data.reply||typeof data.reply!=="string"){
-      throw new Error(data.error||"Réponse invalide du serveur.");
-    }
-
-    addMessage(data.reply,"bot");
-    history.push(
-      {role:"user",content:message},
-      {role:"assistant",content:data.reply}
-    );
-
-    if(history.length>20)history=history.slice(-20);
-
-    status.textContent="MD FUN AI est prête 💖";
-
-    if(fromCall&&callActive){
-      callStatus.textContent="🔊 MD FUN AI te répond...";
-      speak(data.reply,()=>{
-        waitingForAI=false;
-        if(callActive)startCallListening();
-      });
-    }else if(fromCall){
-      waitingForAI=false;
-    }
-
-  }catch(error){
-    console.error(error);
-    addMessage("Je n'arrive pas à joindre mon serveur pour le moment. Vérifie ta connexion et réessaie.","bot");
-    status.textContent="Problème de connexion";
-
-    if(fromCall){
-      waitingForAI=false;
-      if(callActive){
-        callStatus.textContent="Erreur de connexion. Je vais réessayer de t'écouter.";
-        setTimeout(startCallListening,1200);
-      }
-    }
-  }finally{
-    send.disabled=false;
-    if(!fromCall)input.focus();
-  }
+try{
+data = await response.json();
+}catch{
+data = {};
 }
 
-form.addEventListener("submit",event=>{
-  event.preventDefault();
-  sendMessage(input.value,false);
+if(!response.ok){
+
+throw new Error(
+data.error ||
+"Une erreur est survenue."
+);
+
+}
+
+return data;
+}
+
+/* AUTH TABS */
+
+loginTab.addEventListener("click", () => {
+
+loginTab.classList.add("active");
+
+registerTab.classList.remove("active");
+
+loginForm.classList.add("active");
+
+registerForm.classList.remove("active");
+
+authMessage.textContent = "";
+
 });
 
-function createRecognition(){
-  if(!recognitionSupported)return null;
+registerTab.addEventListener("click", () => {
 
-  const r=new SpeechRecognition();
-  r.lang="fr-FR";
-  r.continuous=false;
-  r.interimResults=false;
-  r.maxAlternatives=1;
+registerTab.classList.add("active");
 
-  r.onstart=()=>{
-    listening=true;
-    callStatus.textContent="🎙️ Je t'écoute... Parle naturellement.";
-  };
+loginTab.classList.remove("active");
 
-  r.onresult=event=>{
-    const transcript=event.results[0][0].transcript.trim();
-    listening=false;
+registerForm.classList.add("active");
 
-    if(transcript&&callActive&&!waitingForAI){
-      sendMessage(transcript,true);
-    }else if(callActive&&!waitingForAI){
-      setTimeout(startCallListening,500);
-    }
-  };
+loginForm.classList.remove("active");
 
-  r.onerror=event=>{
-    listening=false;
-    if(!callActive)return;
+authMessage.textContent = "";
 
-    if(event.error==="not-allowed"||event.error==="service-not-allowed"){
-      callStatus.textContent="Micro refusé. Autorise le microphone dans Chrome puis relance l'appel.";
-      stopCall();
-    }else if(event.error==="no-speech"){
-      callStatus.textContent="Je n'ai pas entendu. Je t'écoute encore...";
-      setTimeout(startCallListening,700);
-    }else if(event.error!=="aborted"){
-      callStatus.textContent="Problème de reconnaissance vocale : "+event.error;
-      setTimeout(startCallListening,1200);
-    }
-  };
-
-  r.onend=()=>{
-    listening=false;
-    if(callActive&&!waitingForAI&&!speaking){
-      setTimeout(startCallListening,500);
-    }
-  };
-
-  return r;
-}
-
-function startCallListening(){
-  if(!callActive||waitingForAI||listening||speaking)return;
-
-  if(!recognitionSupported){
-    callStatus.textContent="La reconnaissance vocale n'est pas prise en charge. Essaie Chrome.";
-    return;
-  }
-
-  recognition=createRecognition();
-
-  try{
-    recognition.start();
-  }catch(error){
-    listening=false;
-    callStatus.textContent="Le microphone redémarre...";
-    setTimeout(()=>{
-      if(callActive&&!waitingForAI)startCallListening();
-    },900);
-  }
-}
-
-function startCall(){
-  if(!recognitionSupported||!("speechSynthesis" in window)){
-    callStatus.textContent="Ton navigateur ne prend pas en charge toutes les fonctions vocales nécessaires. Essaie Chrome.";
-    return;
-  }
-
-  callActive=true;
-  callButton.classList.add("active");
-  callButton.textContent="📴 Raccrocher";
-  callStatus.textContent="Connexion au microphone...";
-  startCallListening();
-}
-
-function stopCall(){
-  callActive=false;
-  waitingForAI=false;
-  listening=false;
-  speaking=false;
-
-  if(recognition){
-    try{
-      recognition.onend=null;
-      recognition.onerror=null;
-      recognition.stop();
-    }catch(error){}
-    recognition=null;
-  }
-
-  if("speechSynthesis" in window)window.speechSynthesis.cancel();
-
-  interruptButton.style.display="none";
-  callButton.classList.remove("active");
-  callButton.textContent="📞 Démarrer l'appel vocal";
-  callStatus.textContent="Appel terminé.";
-}
-
-callButton.addEventListener("click",()=>{
-  if(callActive)stopCall();
-  else startCall();
 });
 
-mic.addEventListener("click",()=>{
-  if(!recognitionSupported){
-    status.textContent="Dictée indisponible dans ce navigateur. Essaie Chrome.";
-    return;
-  }
+/* REGISTER */
 
-  const dictation=new SpeechRecognition();
-  dictation.lang="fr-FR";
-  dictation.continuous=false;
-  dictation.interimResults=false;
+registerForm.addEventListener(
+"submit",
+async event => {
 
-  mic.disabled=true;
-  status.textContent="🎤 Je t'écoute...";
+event.preventDefault();
 
-  dictation.onresult=event=>{
-    input.value=event.results[0][0].transcript;
-    status.textContent="Texte reconnu. Tu peux l'envoyer.";
-  };
+const email =
+document.getElementById("registerEmail")
+.value.trim();
 
-  dictation.onerror=event=>{
-    status.textContent="Problème de micro : "+event.error;
-  };
+const password =
+document.getElementById("registerPassword")
+.value;
 
-  dictation.onend=()=>{
-    mic.disabled=false;
-  };
+authMessage.textContent =
+"Création du compte...";
 
-  try{
-    dictation.start();
-  }catch(error){
-    mic.disabled=false;
-    status.textContent="Impossible de démarrer le micro. Réessaie.";
-  }
+try{
+
+const data =
+await api("/auth/register", {
+
+method:"POST",
+
+body:JSON.stringify({
+email,
+password
+})
+
 });
+
+token = data.token;
+
+currentUser = data.user;
+
+localStorage.setItem(
+"md_fun_token",
+token
+);
+
+showApp();
+
+}catch(error){
+
+authMessage.textContent =
+"❌ " + error.message;
+
+}
+
+}
+);
+
+/* LOGIN */
+
+loginForm.addEventListener(
+"submit",
+async event => {
+
+event.preventDefault();
+
+const email =
+document.getElementById("loginEmail")
+.value.trim();
+
+const password =
+document.getElementById("loginPassword")
+.value;
+
+authMessage.textContent =
+"Connexion...";
+
+try{
+
+const data =
+await api("/auth/login", {
+
+method:"POST",
+
+body:JSON.stringify({
+email,
+password
+})
+
+});
+
+token = data.token;
+
+currentUser = data.user;
+
+localStorage.setItem(
+"md_fun_token",
+token
+);
+
+showApp();
+
+}catch(error){
+
+authMessage.textContent =
+"❌ " + error.message;
+
+}
+
+}
+);
+
+/* SHOW APP */
+
+function showApp(){
+
+authScreen.style.display =
+"none";
+
+mainApp.style.display =
+"block";
+
+userEmail.textContent =
+"👤 " +
+(currentUser?.email || "Utilisateur");
+
+status.textContent =
+"MD FUN AI est prête 💖";
+
+}
+
+/* SESSION CHECK */
+
+async function checkSession(){
+
+if(!token){
+return;
+}
+
+try{
+
+const data =
+await api("/auth/me", {
+method:"GET"
+});
+
+currentUser = data.user;
+
+showApp();
+
+}catch{
+
+token = "";
+
+localStorage.removeItem(
+"md_fun_token"
+);
+
+localStorage.removeItem(
+"md_fun_conversation"
+);
+
+}
+
+}
+
+/* LOGOUT */
+
+logoutBtn.addEventListener(
+"click",
+async () => {
+
+try{
+
+await api("/auth/logout", {
+method:"POST"
+});
+
+}catch(error){
+console.log(error);
+}
+
+token = "";
+
+currentUser = null;
+
+conversationId = "";
+
+localStorage.removeItem(
+"md_fun_token"
+);
+
+localStorage.removeItem(
+"md_fun_conversation"
+);
+
+mainApp.style.display =
+"none";
+
+authScreen.style.display =
+"flex";
+
+}
+);
+
+/* ADD MESSAGE */
+
+function addMessage(text, who){
+
+const div =
+document.createElement("div");
+
+div.className =
+"msg " + who;
+
+const content =
+document.createElement("div");
+
+content.textContent = text;
+
+div.appendChild(content);
+
+if(who === "bot"){
+
+const voiceButton =
+document.createElement("button");
+
+voiceButton.type =
+"button";
+
+voiceButton.className =
+"voice-button";
+
+voiceButton.textContent =
+"🔊 Écouter";
+
+voiceButton.addEventListener(
+"click",
+() => speak(text)
+);
+
+div.appendChild(
+voiceButton
+);
+
+}
+
+chat.appendChild(div);
+
+chat.scrollTop =
+chat.scrollHeight;
+
+}
+
+/* VOIX IA */
+
+function speak(text){
+
+if(
+!("speechSynthesis" in window)
+){
+
+status.textContent =
+"La lecture vocale n'est pas disponible.";
+
+return;
+
+}
+
+window.speechSynthesis.cancel();
+
+const utterance =
+new SpeechSynthesisUtterance(text);
+
+utterance.lang = "fr-FR";
+
+utterance.rate = 1;
+
+utterance.pitch = 1;
+
+window.speechSynthesis.speak(
+utterance
+);
+
+}
+
+/* MOODS */
+
+document
+.querySelectorAll(".mood-btn")
+.forEach(button => {
+
+button.addEventListener(
+"click",
+() => {
+
+document
+.querySelectorAll(".mood-btn")
+.forEach(b => {
+
+b.classList.remove(
+"active"
+);
+
+});
+
+button.classList.add(
+"active"
+);
+
+selectedMood =
+button.dataset.mood;
+
+modeText.textContent =
+"Mood : " +
+selectedMood;
+
+addMessage(
+"Parfait. Ton mood actuel est : " +
+selectedMood +
+". Je vais adapter mon ton à toi.",
+"bot"
+);
+
+}
+);
+
+});
+
+/* CARDS */
+
+document
+.getElementById("moodCard")
+.addEventListener(
+"click",
+() => {
+
+document
+.querySelector(".mood-box")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+);
+
+document
+.getElementById("dreamCard")
+.addEventListener(
+"click",
+() => {
+
+selectedMood =
+"Mode Rêves et imagination";
+
+modeText.textContent =
+"🌙 Mode Rêves activé";
+
+input.placeholder =
+"Raconte ton rêve...";
+
+addMessage(
+"🌙 Bienvenue dans Mes Rêves. Raconte-moi ton rêve et nous allons l'explorer ensemble.",
+"bot"
+);
+
+}
+);
+
+document
+.getElementById("gameCard")
+.addEventListener(
+"click",
+() => {
+
+selectedMood =
+"Mode Jeux et Défis";
+
+modeText.textContent =
+"🎮 Mode Jeux et Défis";
+
+input.placeholder =
+"Choisis un jeu ou un défi...";
+
+addMessage(
+"🎮 Mode Jeux activé ! Demande-moi un jeu, une énigme ou un défi.",
+"bot"
+);
+
+}
+);
+
+document
+.getElementById("funCard")
+.addEventListener(
+"click",
+() => {
+
+selectedMood =
+"Mode humour et grand délire";
+
+modeText.textContent =
+"🤪 Mode Grand Délire";
+
+addMessage(
+"🤪 Mode délire activé ! Maintenant, tu peux me demander quelque chose de complètement fou.",
+"bot"
+);
+
+}
+);
+
+/* CHAT */
+
+form.addEventListener(
+"submit",
+async event => {
+
+event.preventDefault();
+
+const message =
+input.value.trim();
+
+if(
+!message ||
+send.disabled
+){
+return;
+}
+
+addMessage(
+message,
+"user"
+);
+
+input.value = "";
+
+send.disabled = true;
+
+status.textContent =
+"MD FUN AI réfléchit...";
+
+try{
+
+const data =
+await api("/chat", {
+
+method:"POST",
+
+body:JSON.stringify({
+
+message,
+
+mood:selectedMood,
+
+conversationId
+
+})
+
+});
+
+if(
+data.conversationId
+){
+
+conversationId =
+data.conversationId;
+
+localStorage.setItem(
+"md_fun_conversation",
+conversationId
+);
+
+}
+
+addMessage(
+data.reply,
+"bot"
+);
+
+status.textContent =
+"MD FUN AI est prête 💖";
+
+}catch(error){
+
+console.error(error);
+
+addMessage(
+"😅 Oups ! " +
+error.message,
+"bot"
+);
+
+status.textContent =
+"Problème de connexion";
+
+if(
+error.message
+.includes("Connecte-toi")
+){
+
+logoutBtn.click();
+
+}
+
+}finally{
+
+send.disabled = false;
+
+input.focus();
+
+}
+
+}
+);
+
+/* MICRO */
+
+const SpeechRecognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+mic.addEventListener(
+"click",
+() => {
+
+if(!SpeechRecognition){
+
+status.textContent =
+"La reconnaissance vocale n'est pas disponible ici. Essaie Chrome.";
+
+return;
+
+}
+
+if(
+listening &&
+recognition
+){
+
+recognition.stop();
+
+return;
+
+}
+
+recognition =
+new SpeechRecognition();
+
+recognition.lang =
+"fr-FR";
+
+recognition.interimResults =
+false;
+
+recognition.continuous =
+false;
+
+recognition.onstart =
+() => {
+
+listening = true;
+
+mic.textContent =
+"⏹️";
+
+status.textContent =
+"🎤 Je t'écoute...";
+
+};
+
+recognition.onresult =
+event => {
+
+const transcript =
+event.results[0][0]
+.transcript;
+
+input.value =
+transcript;
+
+status.textContent =
+"Message reconnu. Envoi...";
+
+form.requestSubmit();
+
+};
+
+recognition.onerror =
+event => {
+
+status.textContent =
+"Problème de micro : " +
+event.error;
+
+};
+
+recognition.onend =
+() => {
+
+listening = false;
+
+mic.textContent =
+"🎤";
+
+};
+
+try{
+
+recognition.start();
+
+}catch{
+
+listening = false;
+
+mic.textContent =
+"🎤";
+
+status.textContent =
+"Impossible de démarrer le micro.";
+
+}
+
+}
+);
+
+/* START */
+
+checkSession();
+
 </script>
+
 </body>
 </html>
