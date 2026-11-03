@@ -1,9 +1,0 @@
-import {requireUser,sendJson,methodNotAllowed} from "../lib/supabase.js";
-export default async function handler(req,res){
- try{const a=await requireUser(req,res);if(!a)return;const {supabase,user}=a;
-  if(req.method==="GET"){const {data,error}=await supabase.from("memories").select("id,content,created_at,updated_at").eq("user_id",user.id).order("updated_at",{ascending:false}).limit(100);if(error)return sendJson(res,500,{error:error.message});return sendJson(res,200,{memories:data||[]});}
-  if(req.method==="POST"){const content=String(req.body?.content||"").trim();if(!content||content.length>2000)return sendJson(res,400,{error:"La mémoire doit contenir de 1 à 2 000 caractères."});const {data,error}=await supabase.from("memories").insert({user_id:user.id,content}).select("id,content,created_at,updated_at").single();if(error)return sendJson(res,500,{error:error.message});return sendJson(res,201,{memory:data});}
-  if(req.method==="DELETE"){const id=String(req.query?.id||"");if(!id)return sendJson(res,400,{error:"Identifiant manquant."});const {error}=await supabase.from("memories").delete().eq("id",id).eq("user_id",user.id);if(error)return sendJson(res,500,{error:error.message});return sendJson(res,200,{success:true});}
-  return methodNotAllowed(res,["GET","POST","DELETE"]);
- }catch(e){return sendJson(res,500,{error:e.message||"Erreur mémoire."});}
-}
