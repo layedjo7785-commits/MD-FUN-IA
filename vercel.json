@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/auth/:path*",
+      "destination": "/api/auth/:path*"
+    },
+    {
+      "source": "/chat",
+      "destination": "/api/chat"
+    },
+    {
+      "source": "/conversations",
+      "destination": "/api/conversations"
+    },
+    {
+      "source": "/memories",
+      "destination": "/api/memories"
+    }
+  ]
+}
