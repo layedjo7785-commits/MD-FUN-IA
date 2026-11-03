@@ -1,0 +1,33 @@
+import {requireUser,sendJson,methodNotAllowed} from "../lib/supabase.js";
+const SYSTEM=`Tu es MD FUN AI, une assistante drôle, intelligente, chaleureuse et attentive. Adapte ton humour à l'humeur choisie. Reste respectueuse et originale. Réponds sérieusement quand le sujet l'exige. Si on te demande un spectacle, crée un spectacle développé avec titre, introduction, scènes, dialogues, personnages, punchlines variées et conclusion. Réponds dans la langue demandée si tu la maîtrises.`;
+export default async function handler(req,res){
+ if(req.method!=="POST")return methodNotAllowed(res,["POST"]);
+ try{
+  const auth=await requireUser(req,res);if(!auth)return;const {supabase,user}=auth;
+  const {message,mood="",conversationId=""}=req.body||{};const text=String(message||"").trim();
+  if(!text)return sendJson(res,400,{error:"Écris un message avant d'envoyer."});
+  if(text.length>2000)return sendJson(res,400,{error:"Ton message dépasse 2 000 caractères."});
+  const key=process.env.GEMINI_API_KEY;if(!key)return sendJson(res,503,{error:"Le moteur IA n'est pas configuré. Ajoute GEMINI_API_KEY dans Vercel."});
+  let cid=String(conversationId||"");
+  if(cid){
+   const {data,error}=await supabase.from("conversations").select("id").eq("id",cid).eq("user_id",user.id).maybeSingle();
+   if(error)return sendJson(res,500,{error:"Impossible de vérifier la conversation."});if(!data)cid="";
+  }
+  if(!cid){
+   const {data,error}=await supabase.from("conversations").insert({user_id:user.id,title:text.slice(0,70)||"Nouvelle conversation"}).select("id").single();
+   if(error)return sendJson(res,500,{error:"Création de conversation impossible : "+error.message});cid=data.id;
+  }
+  const {data:rows,error:histErr}=await supabase.from("messages").select("role,content").eq("conversation_id",cid).eq("user_id",user.id).order("created_at",{ascending:false}).limit(16);
+  if(histErr)return sendJson(res,500,{error:"Impossible de charger l'historique."});
+  const {error:saveErr}=await supabase.from("messages").insert({conversation_id:cid,user_id:user.id,role:"user",content:text});
+  if(saveErr)return sendJson(res,500,{error:"Enregistrement du message impossible : "+saveErr.message});
+  const contents=[...(rows||[]).reverse().map(m=>({role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]})),{role:"user",parts:[{text:`Humeur ou mode : ${String(mood).slice(0,120)||"aucun"}\\nMessage : ${text}`}]}];
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({systemInstruction:{parts:[{text:SYSTEM}]},contents,generationConfig:{temperature:0.9,maxOutputTokens:1800}})});
+  const out=await r.json().catch(()=>({}));if(!r.ok)return sendJson(res,502,{error:out?.error?.message||"Le service IA a refusé la demande."});
+  const reply=(out?.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("").trim();if(!reply)return sendJson(res,502,{error:"L'IA n'a pas fourni de réponse."});
+  const {error:replyErr}=await supabase.from("messages").insert({conversation_id:cid,user_id:user.id,role:"assistant",content:reply});
+  if(replyErr)return sendJson(res,500,{error:"Réponse générée, mais sauvegarde impossible."});
+  await supabase.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",cid).eq("user_id",user.id);
+  return sendJson(res,200,{reply,conversationId:cid});
+ }catch(e){return sendJson(res,500,{error:e.message||"Erreur interne du serveur."});}
+  }
